@@ -17,6 +17,8 @@ import ProductPage from "./Pages/ProductPage";
 import CategoryContent from "./Pages/CategoryContent";
 import DisProducts from "./Pages/Dis";
 import ProductSection from "./Pages/Detail";
+import CheckoutComponent from "./Pages/Payment";
+import AccountAdmin from "./Components/admin1/AccountAdmin";
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
         {/* <AuthProvider> */}
         <Navbar />
         <div className="h-full">
+          
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<SignIn />} />
@@ -37,8 +40,11 @@ function App() {
             <Route path="/category/:category" element={<CategoryContent />} />
             <Route path="/orders" element={<OrderPage />} />
             <Route path="/products" element={<ProductPage />} />
-            <Route path="/discount/:dis" element={<DisProducts />} />
+            <Route path="/discount/:id" element={<DisProducts />} />
             <Route path="/product/:id" element={<ProductSection />} />
+            <Route path="/payment" element={<CheckoutComponent />} />
+            <Route path="/cart" element={<ProductSection />} />
+            <Route path="/admin" element={<AccountAdmin />} />
           </Routes>
         </div>
         <Footer />

@@ -22,8 +22,11 @@ const admin_Router = require("./routes/admin_routes");
 const orders_Router = require("./routes/orders_routes");
 const Wishlist_Router = require("./routes/wishlist_routes");
 
-const productsRouter = require("./routes/productsRouter ay");
+const productsRouter_ay = require("./routes/productsRouter ay");
 const profileRouter = require("./routes/profileRouter");
+const productsRouter = require("./routes/productsRouter");
+
+const cartRoutes = require("./routes/cartRoutes");
 
 // ---------------------------------------------------------------------
 
@@ -35,6 +38,9 @@ app.use(products_Router);
 app.use(admin_Router);
 app.use(orders_Router);
 app.use(Wishlist_Router);
+app.use(productsRouter_ay);
+app.use(cartRoutes);
+
 
 app.use(bodyParser.json());
 app.use(productsRouter);
@@ -47,6 +53,9 @@ app.use(
   "/profileImages",
   express.static(path.join(__dirname, "profileImages"))
 );
+
+// const cartRoutes = require("./routes/cartRoutes");
+// app.use(cartRoutes);
 
 // ---------------------------------------------------------------------------
 

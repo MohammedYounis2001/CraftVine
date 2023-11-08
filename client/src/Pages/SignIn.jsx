@@ -3,12 +3,14 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
 // import { GoogleLogin } from 'react-google-login';
+import Cookies from 'js-cookie';
+
 const SignIn = () => {
   const history = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [cookies, setCookie] = useCookies(['token']);
+  // const [cookies, setCookie] = useCookies(['token']);
 
   const handleSignIn = async () => {
     if (!email || !password) {
@@ -24,14 +26,16 @@ const SignIn = () => {
 
       // Assuming the API returns a token
       const token = response.data.token;
-
-      // Set the token in a cookie
-      setCookie('token', token, { path: '/' });
+      const user_id = response.data.user_id;
+      console.log("I am here>>>>>>>>>>>>>>>>>>>>>>>>>>>",response.data)
+      Cookies.set("token",token);
+      Cookies.set("user_id",user_id)
+      // const id = Cookies.get("user_id")
       setError("Sign-in successful");
       history("/");
 
       // Handle successful sign-in, e.g., redirect or show a success message
-      // alert("Sign-in successful:", response.data);
+      alert("Sign-in successful:", response.data);
       console.log("Sign-in successful:", response.data);
     } catch (error) {
       // Delay the error message and handle it

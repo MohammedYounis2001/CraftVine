@@ -9,21 +9,25 @@ router.get(
   "/Get_Products_By_Category/:category",
   productController.getProductsByCategory
 );
+router.get(
+  "/Get_Products_By_Discount/:discount_percent",
+  productController.getProductsByDiscount
+);
 router.post(
   "/Add_New_product",
-  authenticateToken.authorize,
+  authenticateToken.authorize(["admin", "superuser"]),
   productController.imageProduct,
   productController.addNewProduct
 );
 router.put(
   "/Update_Product_By_Id/:id",
-  authenticateToken.authorize,
+  authenticateToken.authorize(["admin", "superuser"]),
   productController.imageProduct,
   productController.updateProductById
 );
 router.delete(
   "/Delete_Product_By_Id/:id",
-  authenticateToken.authorize,
+  authenticateToken.authorize(["admin"]),
   productController.deleteProductById
 );
 

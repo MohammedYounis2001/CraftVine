@@ -25,6 +25,7 @@ const Category = () => {
   // Fetch products from the API
   useEffect(() => {
     axios
+    //error 
       .get("https://fakestoreapi.com/products")
       .then((response) => {
         // Set the product data
@@ -40,8 +41,8 @@ const Category = () => {
     <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
       <h1 className="text-teal-600 text-4xl mb-6 font-bold item-center justify-center text-center">Category</h1>
       <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mx-[6rem] ">
-        {data.map((item, index) => (
-          <Link to={`/category/${item.category}`} key={index}>
+        {staticTitles.map((title, index) => (
+          <Link to={`/category/${title}`} key={index}>
             <div className="relative overflow-hidden transition duration-300 transform rounded shadow-lg lg:hover:-translate-y-2 hover:shadow-2xl">
               <img
                 className="object-cover w-full h-64"

@@ -9,14 +9,18 @@ const CategoryContent = () => {
   const category = useParams();
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 9;
+  const [blogImages, setBlogImages] = useState(null);
 
   // Fetch products
   useEffect(() => {
     axios
       // .get("https://fakestoreapi.com/products")
-      .get("http://localhost:5000/Get_Products_By_Category/:category")
+      .get(`http://localhost:5000/Get_Products_By_Category/${category.category}`)
       .then((response) => {
-        setProducts(response.data);
+        setProducts(response.data.data);
+        console.log(response.data.data);
+        setBlogImages(response.data.data[0].images);
+        console.log(response.data.data.images); 
       })
       .catch((error) => {
         // Handle errors here
@@ -24,21 +28,21 @@ const CategoryContent = () => {
       });
   }, []);
 
-  useEffect(() => {
-    if (products.length > 0 && category) {
-      const filtered = products.filter(
-        (product) => product.category === category.categoryName
-      );
-      setFilteredProducts(filtered);
-    }
-  }, [products, category]);
+  // useEffect(() => {
+  //   if (products.length > 0 && category) {
+  //     const filtered = products.filter(
+  //       (product) => product.category === category.category
+  //     );
+  //     setFilteredProducts(filtered);
+  //   }
+  // }, [products, category]);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  const searchFilteredProducts = filteredProducts.filter((product) =>
-    product.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const searchFilteredProducts = products.filter((product) =>
+    product.product_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -71,23 +75,23 @@ const CategoryContent = () => {
       <div className="relative flex flex-wrap gap-7 justify-center items-center mx-16">
         {currentProducts.map((product) => (
           <div
-            key={product.id}
+            key={product.product_id}
             className="group my-2 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
           >
             <Link
               className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl"
-              to={`/product/${product.id}`}
+              to={`/product/${product.product_id}`}
             >
               <img
                 className="peer absolute border top-0 right-0 h-full w-full object-cover"
-                src={product.image}
+                src={blogImages[0].image_url}
                 alt="product image"
               />
             </Link>
             <div className="mt-4 px-5 pb-5">
               <a href="#">
                 <h5 className="text-xl text-start h-8 mb-5 overflow-hidden tracking-tight text-slate-900">
-                  {product.title}
+                  {product.product_name}
                 </h5>
               </a>
               <div className="mt-2 mb-5 flex items-center justify-between">

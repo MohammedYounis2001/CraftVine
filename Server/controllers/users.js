@@ -109,7 +109,7 @@ exports.loginUser = async (req, res) => {
         first_name: checked.rows[0].first_name,
         last_name: checked.rows[0].last_name,
         email: checked.rows[0].email,
-        role: checked.rows[0].user_role,
+        user_role: checked.rows[0].user_role,
         user_id: checked.rows[0].user_id,
       };
       const secretKey = process.env.SECRET_KEY;

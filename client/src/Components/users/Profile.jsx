@@ -5,10 +5,17 @@ import { useCookies } from 'react-cookie';
 const Profile = () => {
   const [user, setUser] = useState([]);
   const [headers, setHeaders] = useState();
-  const [token] = useCookies(['token']);
-
+const [cookie, setCookie, removeCookie] = useCookies(["token"],{token:null});
+  console.log(useCookies(["token"]));
   useEffect(() => {
-    setHeaders({'token': token})
+    if (cookie.token !== undefined) {
+      setUser(true);
+    }else{
+      setUser(false);
+    }
+  },[]);
+  useEffect(() => {
+    setHeaders({'token': cookie.token})
     axios
       .get(`http://localhost:5000/user`
       ,{

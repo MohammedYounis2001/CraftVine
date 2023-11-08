@@ -5,33 +5,57 @@ import { Link, useParams } from "react-router-dom";
 const DisProducts = () => {
   // const [quantity, setQuantity] = useState(2);
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-
-  const category = useParams(); 
+  // const [filteredProducts, setFilteredProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [blogImages, setBlogImages] = useState(null);
+  const {id} = useParams(); 
+  console.log(id);
 
 
   // fetch products
   useEffect(() => {
-    console.log(category);
+   
     axios
-      .get("https://fakestoreapi.com/products")
+      .get(`http://localhost:5000/Get_Products_By_Discount/${id}`)
       .then((response) => {
-        setProducts(response.data)
+    
+        setProducts(response.data.data)
+        console.log(response.data.data)
+        setBlogImages(response.data.data[0].images);
+        console.log(response.data.data.images);
+         
       })
       .catch((error) => {
         // Handle errors here
         console.error("Error:", error);
       });
-  }, []);
-
-  useEffect(() => {
-    if (products.length > 0 && category) {
-      const filtered = products.filter((product) => product.rating === category);
-      console.log(products);
-      console.log(filtered);
-      setFilteredProducts(filtered);
+  }, [id]);
+  console.log(blogImages);
+  const addToCart = async () => {
+    try {
+      const response = await axios.post('https://fakestoreapi.com/carts', {
+      
+        "id" : id
+          });
+      if (response.status === 200) {
+        alert("Added to cart successfully!");
+        // setCart([...cart, blogPost]);
+      }
+    } catch (error) {
+      console.log("Error adding to cart:", error);
+      
     }
-  }, [products, category]);
+  };
+
+  // useEffect(() => {
+  //   if (products.length > 0 && id) {
+  //     const filtered = products.filter((product) => product.discount_percentage === id);
+  //     console.log(products);
+  //     console.log(filtered);
+
+  //     setFilteredProducts(filtered);
+  //   }
+  // }, [products, id]);
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const productPerPage = 9;
@@ -62,35 +86,31 @@ const DisProducts = () => {
   return (
     <div className="my-16">
     
-      <h1 className="text-teal-600 text-4xl mb-6 font-bold">Explore Our Products</h1>
+      <h1 className="text-teal-600 text-4xl mb-6 font-bold">Discount</h1>
       <div className="relative flex flex-wrap gap-7 justify-center items-center mx-16">
-        {filteredProducts.map((product) => (
-          <div key={product.id} className="group my-2 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+        {products.map((product) => (
+          <div
+            key={product.product_id}
+            className="group my-2 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md"
+          >
             <Link
               className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl"
-              to={`/product/${product.category}`}
+              to={`/product/${product.product_id}`}
             >
               <img
                 className="peer absolute border top-0 right-0 h-full w-full object-cover"
-                src={product.image}
+                src={blogImages[0].image_url}
                 alt="product image"
               />
-              {/* <img
-                className="peer absolute top-0 border -right-96 h-full w-full object-cover transition-all delay-100 duration-1000 hover:right-0 peer-hover:right-0"
-                src={product.image[1]}
-                alt="product image"
-              /> */}
-              {/* <span className="absolute top-0 left-0 m-2 rounded-full bg-black px-2 text-center text-sm font-medium text-white">39% OFF</span> */}
             </Link>
             <div className="mt-4 px-5 pb-5">
               <a href="#">
                 <h5 className="text-xl text-start h-8 mb-5 overflow-hidden tracking-tight text-slate-900">
-                  {product.title}
+                  {product.product_name}
                 </h5>
               </a>
               <div className="mt-2 mb-5 flex items-center justify-between">
                 <p>
-                  {/* <span className="text-3xl font-bold  line-through text-teal-600">${product.price}</span> */}
                   <span className="text-lg font-bold text-slate-900">
                     ${product.price}
                   </span>

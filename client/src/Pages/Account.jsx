@@ -16,7 +16,7 @@ const Account = () => {
   // fetch products
   useEffect(() => {
     axios
-      .get("http://localhost:5000/users/1")
+      .get("http://localhost:5000/user")
       .then((response) => {
         setUser(response.data);
         setPhotoPreview(user.profile_image_name);

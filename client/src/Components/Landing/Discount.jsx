@@ -34,7 +34,7 @@ const Discount = () => {
       </div>
     
       
-      <div className="flex justify-center items-center w-full mx-10">
+      <div className="flex flex-col md:flex-row gap-3 flex-wrap justify-center items-center w-full mx-10">
         <div className="mr-10 " >
           <Link to= "/discount/20" className="block  rounded-lg  h-60 p-2 transition hover:scale-105" style={divStyle1} href="#">
             
@@ -48,7 +48,7 @@ const Discount = () => {
           </Link>
         </div>
        
-        <div className="mr-10 h-96" >
+        <div className="mr-10 lg:h-96" >
           <Link to ="/discount/70" className="block  rounded-lg  h-60 p-2 transition hover:scale-105" style={divStyle2} href="#">
            
             <div className="flex items-center rounded-md px-4  py-3">

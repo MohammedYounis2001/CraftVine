@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const category = useParams();
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,39 +15,24 @@ const ProductPage = () => {
       .get("http://localhost:5000/All_products")
       .then((response) => {
         setProducts(response.data.data);
-        // console.log(response.data.data);
       })
       .catch((error) => {
-        // Handle errors here
         console.error("Error:", error);
       });
   }, []);
 
-  useEffect(() => {
-    if (products.length > 0 && category) {
-      const filtered = products.filter(
-        (product) => product.category === category.categoryName
-      );
-      setFilteredProducts(filtered);
-    }
-  }, [products, category]);
-
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
-console.log(products);
-  const searchFilteredProducts = filteredProducts.filter((product) =>
-    product.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = searchFilteredProducts.slice(
+  const currentProducts = products.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
 
-  const totalPages = Math.ceil(searchFilteredProducts.length / productsPerPage);
+  const totalPages = Math.ceil(products.length / productsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -80,11 +64,9 @@ console.log(products);
               alt="product image"
             />
             <div className="mt-4 px-5 pb-5">
-              
-                <h5 className="text-xl text-start h-8 mb-5 overflow-hidden tracking-tight text-slate-900">
-                  {product.product_name}
-                </h5>
-            
+              <h5 className="text-xl text-start h-8 mb-5 overflow-hidden tracking-tight text-slate-900">
+                {product.product_name}
+              </h5>
               <div className="mt-2 mb-5 flex items-center justify-between">
                 <p>
                   <span className="text-lg font-bold text-slate-900">
@@ -99,11 +81,11 @@ console.log(products);
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  stroke-width="2"
+                  strokeWidth="2"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>

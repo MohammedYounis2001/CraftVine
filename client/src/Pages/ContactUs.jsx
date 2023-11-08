@@ -14,7 +14,7 @@ const ContactUs = () => {
     e.preventDefault();
 
     // Send a POST request with the data to your API endpoint
-    axios.post('YOUR_API_ENDPOINT', formData)
+    axios.post('http://localhost:5000/contact', formData)
       .then((response) => {
         // Handle the success response here
         console.log('Message sent successfully:', response.data);

@@ -232,54 +232,55 @@ exports.add_discount = async (req, res) => {
 
 // Update the 'is_deleted' column to true for a product
 exports.product_soft_delete = async (req, res) => {
-    try {
-      const productId = req.params.id;
-      console.log("Product ID to be deleted:", productId);
-  
-      const updateIsDeletedQuery = `
+  try {
+    const productId = req.params.id;
+    console.log("Product ID to be deleted:", productId);
+
+    const updateIsDeletedQuery = `
         UPDATE products SET is_deleted = true WHERE product_id = $1
       `;
-      
-      const result = await db.query(updateIsDeletedQuery, [productId]);
-      console.log("Result:", result.rows);
-  
-      if (result.rowCount > 0) {
-        res.status(200).json({ message: "is_deleted updated to true for the product" });
-      } else {
-        res.status(404).json({ message: "Product not found" });
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Internal Server Error" });
+
+    const result = await db.query(updateIsDeletedQuery, [productId]);
+    console.log("Result:", result.rows);
+
+    if (result.rowCount > 0) {
+      res
+        .status(200)
+        .json({ message: "is_deleted updated to true for the product" });
+    } else {
+      res.status(404).json({ message: "Product not found" });
     }
-  };
-  
-  // Restore a soft-deleted product
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Restore a soft-deleted product
 exports.product_restore = async (req, res) => {
-    try {
-      const productId = req.params.id;
-      console.log("Product ID to be restored:", productId);
-  
-      const restoreProductQuery = `
+  try {
+    const productId = req.params.id;
+    console.log("Product ID to be restored:", productId);
+
+    const restoreProductQuery = `
         UPDATE products SET is_deleted = false WHERE product_id = $1
       `;
-      
-      const result = await db.query(restoreProductQuery, [productId]);
-      console.log("Result:", result.rows);
-  
-      if (result.rowCount > 0) {
-        res.status(200).json({ message: "Product restored successfully" });
-      } else {
-        res.status(404).json({ message: "Product not found" });
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  };
 
-  
-  // Express route to set best_seller to true for a product
+    const result = await db.query(restoreProductQuery, [productId]);
+    console.log("Result:", result.rows);
+
+    if (result.rowCount > 0) {
+      res.status(200).json({ message: "Product restored successfully" });
+    } else {
+      res.status(404).json({ message: "Product not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Express route to set best_seller to true for a product
 exports.set_best_seller = async (req, res) => {
   try {
     const productId = req.params.product_id;
@@ -294,7 +295,9 @@ exports.set_best_seller = async (req, res) => {
     const result = await db.query(updateQuery, [productId]);
 
     if (result.rowCount > 0) {
-      res.status(200).json({ message: "best_seller status set to true for the product" });
+      res
+        .status(200)
+        .json({ message: "best_seller status set to true for the product" });
     } else {
       res.status(404).json({ message: "Product not found" });
     }
@@ -319,7 +322,9 @@ exports.unset_best_seller = async (req, res) => {
     const result = await db.query(updateQuery, [productId]);
 
     if (result.rowCount > 0) {
-      res.status(200).json({ message: "best_seller status set to false for the product" });
+      res
+        .status(200)
+        .json({ message: "best_seller status set to false for the product" });
     } else {
       res.status(404).json({ message: "Product not found" });
     }
@@ -329,57 +334,95 @@ exports.unset_best_seller = async (req, res) => {
   }
 };
 
-  //////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
 
 // Retrieve all orders for all users
 exports.all_orders = async (req, res) => {
-    try {
-        // Query to retrieve all orders with order details
-        const retrieveOrdersQuery = `
+  try {
+    // Query to retrieve all orders with order details
+    const retrieveOrdersQuery = `
             SELECT o.order_id, o.user_id, o.total_amount, o.shipping_address, od.product_id, od.quantity, od.price
             FROM orders o
             INNER JOIN order_details od ON o.order_id = od.order_id
         `;
-      
-        const result = await db.query(retrieveOrdersQuery);
 
-        if (result.rows.length > 0) {
-            res.status(200).json(result.rows); // Return all orders with details
-        } else {
-            res.status(404).json({ message: "No orders found" });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+    const result = await db.query(retrieveOrdersQuery);
+
+    if (result.rows.length > 0) {
+      res.status(200).json(result.rows); // Return all orders with details
+    } else {
+      res.status(404).json({ message: "No orders found" });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
 
 // Retrieve the number of orders, number of clients with orders, and total sum of total_amount
 exports.order_client_and_total_stats = async (req, res) => {
-    try {
-        // Query to get the number of orders, number of clients with orders, and total sum of total_amount
-        const statsQuery = `
+  try {
+    // Query to get the number of orders, number of clients with orders, and total sum of total_amount
+    const statsQuery = `
             SELECT COUNT(*) AS order_count, COUNT(DISTINCT user_id) AS client_count, SUM(price) AS total_amount
             from orders inner join order_details on orders.order_id = order_details.order_id
         `;
-      
-        const result = await db.query(statsQuery);
 
-        if (result.rows.length > 0) {
-            const stats = result.rows[0];
-            res.status(200).json(stats);
-        } else {
-            res.status(404).json({ message: "No orders found" });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+    const result = await db.query(statsQuery);
+
+    if (result.rows.length > 0) {
+      const stats = result.rows[0];
+      res.status(200).json(stats);
+    } else {
+      res.status(404).json({ message: "No orders found" });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
 
-  
-  
-  
-  
-  
+exports.contact = async (req, res) => {
+  try {
+    const { name, email, message } = req.body; // Assuming you receive these details in the request body
+
+    // Implement logic to save the contact message to your database
+    // You can use your database query here to insert the message into a "contact_messages" table
+
+    // Example SQL query to insert the contact message
+    const insertQuery = `INSERT INTO contact_messages (name, email, message)
+      VALUES ($1, $2, $3)
+`;
+
+    const values = [name, email, message];
+
+    // Execute the query to insert the message
+    await db.query(insertQuery, values);
+
+    res
+      .status(201)
+      .json({ message: "Message received and saved successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Retrieve all contact messages
+exports.contact_messages = async (req, res) => {
+  try {
+    // Query the database to retrieve all contact messages
+    const query = `SELECT * FROM contact_messages`;
+    const result = await db.query(query);
+
+    if (result.rows.length > 0) {
+      res.status(200).json(result.rows); // Return all contact messages
+    } else {
+      res.status(404).json({ message: "No contact messages found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
